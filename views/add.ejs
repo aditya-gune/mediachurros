@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Add Movie</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="<%= static_path + "/bootstrap/css/theme/" + theme + "/bootstrap.css" %>" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="<%= static_path + "/bootstrap/css/jumbotron-narrow.css" %>" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="#">Add</a></li>
+        </ul>
+        <h3 class="text-muted">Add Movie</h3>
+      </div>
+	  <% if (flask_debug === 'true') { %>
+      <div class="alert alert-danger">
+      	Flask is in debug mode. This is not safe for production.
+      </div>
+      <% } %>
+      <div id="signupSuccess" class="alert alert-success" style="display:none">
+        <p id="signupSuccessText">Movie added!</p>
+      </div>
+      <div id="signupDuplicate" class="alert alert-success" style="display:none">
+        <p id="signupDuplicateText">Movie already exists.</p>
+      </div>
+      <div id="signupError" class="alert alert-info" style="display:none">
+        <p id="signupErrorText">Error.</p>
+      </div>
+      <div class="jumbotron">
+        
+        <p><a class="btn btn-lg btn-success"  data-toggle="modal" href="#signupModal">New Movie</a></p>
+      </div>
+
+
+      <div class="footer">
+        <p>&copy; Aditya Gune, 2017	</p>
+      </div>
+      
+      <!-- Modal -->
+       <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModal" aria-hidden="true">
+         <div class="modal-dialog">
+           <div class="modal-content">
+             <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+               <h4 class="modal-title">Add a new movie here.</h4>
+             </div>
+             <div class="modal-body">
+               <form id="addMovieForm" role="form">
+			   
+				<div class="form-group">
+                   <label for="url">URL</label>
+                   <input type="text" class="form-control" id="url" name="url" placeholder="Movie URL">
+                 </div>
+            
+				 <div class="form-group">
+                   <label for="title">Title</label>
+                   <input type="text" class="form-control" id="title" name="title" placeholder="Movie title">
+                 </div>
+				 
+				 <div class="form-group">
+                   <label for="year">Year</label>
+                   <input type="text" class="form-control" id="year" name="year" placeholder="Movie year">
+                 </div>
+				 
+				 
+                 <div class="form-group">
+                   <label for="type">Type</label>
+                   <input type="text" class="form-control" id="type" name="type" placeholder="Movie type">
+                 </div>
+				 
+				 <div class="form-group">
+                   <label for="tags">Tags</label>
+                   <input type="text" class="form-control" id="tags" name="tags" placeholder="Separate tags with comma (eg. comedy, romance, action)">
+                 </div>
+				 
+             </div>
+             <div class="modal-footer">
+               <button id="addmovie" type="button" class="btn btn-primary">Add Movie</button>
+             </div>
+           </div><!-- /.modal-content -->
+         </div><!-- /.modal-dialog -->
+       </div><!-- /.modal -->
+
+    </div> <!-- /container -->
+
+    <script src="<%= static_path + "/jquery/jquery-1.11.3.min.js" %>"></script>
+    <script src="<%= static_path + "/bootstrap/js/bootstrap.min.js" %>"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+      $("#addmovie").click(function() {
+        $.post( "/addmovie", $("#addMovieForm").serialize(),
+                function(data) {
+                  $("#signupSuccess").show();
+                }
+              )
+              .error(function(xhr) {
+                switch(xhr.status) {
+                  case 409:
+                    $("#signupDuplicate").show();
+                    break;
+                  default:
+                    $("#signupError").show();
+                }
+              })
+              .always(function() {
+                $("#signupModal").modal('hide');
+              });
+      })
+    })
+    </script>
+  </body>
+</html>

@@ -41,21 +41,45 @@ if (cluster.isMaster) {
     app.use(bodyParser.urlencoded({extended:false}));
 
     app.get('/', function(req, res) {
+		markup = '';
+		ddb.scan({
+			TableName: "Movies"			
+		}, function(err, data){
+			if(err){
+				console.error("err:", JSON.stringify(err, null, 2));
+			}
+			else{
+				data.Items.forEach(function (movie){
+					markup += '<tr>'+
+								'<td>' + movie.title + '</td>' +
+								'<td>' + movie.year + '</td>' +
+								'<td>' + movie.type + '</td>' +
+								'<td>' + movie.tags + '</td>' +
+								'<td>' + movie.url + '</td>' +
+							'</tr>';
+				});
+			console.log("Markup: ", markup);
+			}
+		});
+		
         res.render('index', {
             static_path: 'static',
-            theme: process.env.THEME || 'flatly',
+			movies_markup: markup || 'ERROR SCANNING DB',
+            theme: process.env.THEME || 'slate',
             flask_debug: process.env.FLASK_DEBUG || 'false'
         });
     });
-
-    app.post('/signup', function(req, res) {
+	
+	
+    app.post('/addmovie', function(req, res) {
         var item = {
-            'email': {'S': req.body.email},
-            'name': {'S': req.body.name},
-            'preview': {'S': req.body.previewAccess},
-            'theme': {'S': req.body.theme}
+            'url': {'S': req.body.url},
+            'title': {'S': req.body.title},
+            'year': {'S': req.body.year},
+			'type': {'S': req.body.type},
+            'tags': {'S': req.body.tags}
         };
-
+	
         ddb.putItem({
             'TableName': ddbTable,
             'Item': item,
