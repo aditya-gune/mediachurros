@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mediachurros - Watch Movie</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="<%= static_path + "/bootstrap/css/theme/" + theme + "/bootstrap.css" %>" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="<%= static_path + "/bootstrap/css/videotron.css" %>" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header" id="header">
+        <ul class="nav nav-pills pull-right">
+		  <li><a href="/">Movies</a></li>
+          <li><a href="/add">Add</a></li>
+        </ul>
+       
+      </div>
+	 
+      <div class="jumbotron" id="jumbotron">
+        
+       
+      </div>
+
+
+      <div class="footer">
+        <p>&copy; Aditya Gune, 2017	</p>
+      </div>
+      
+     
+
+    <script src="<%= static_path + "/jquery/jquery-1.11.3.min.js" %>"></script>
+    <script src="<%= static_path + "/bootstrap/js/bootstrap.min.js" %>"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+	if(localStorage.getItem('watch')){
+	
+		  console.log(localStorage.getItem('watch'));
+		  var video = document.createElement('video');
+		  video.type='video/x-matroska; codecs="theora, vorbis"';
+		  video.controls = true;
+		  video.width = $("#jumbotron").width();
+		  video.src = localStorage.getItem('watch');
+		  $("#jumbotron").append(video);
+		  
+		  $("#header").append('<h3>' + localStorage.getItem('title') + '</h3>');
+		  
+	  }
+	  else{
+		console.log("No video primed");
+		var err = '<h3>Error: no file primed.</h3>';
+		$("#jumbotron").append(err);
+	  }
+	  
+    });
+    </script>
+  </body>
+</html>

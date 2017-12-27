@@ -76,6 +76,13 @@ if (cluster.isMaster) {
             flask_debug: process.env.FLASK_DEBUG || 'false'
         });
 	})
+	app.get('/watch', function(req, res) {
+		res.render('watch', {
+            static_path: 'static',
+            theme: process.env.THEME || 'slate',
+            flask_debug: process.env.FLASK_DEBUG || 'false'
+        });
+	})
     app.post('/addmovie', function(req, res) {
         var item = {
             'url': {'S': req.body.url},

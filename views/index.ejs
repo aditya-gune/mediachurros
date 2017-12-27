@@ -43,7 +43,7 @@
 			  <td><%= movies[i].year.S %></td>
 			  <td><%= movies[i].type.S %></td>
 			  <td><%= movies[i].tags.S %></td>
-			  <td><a href ="<%= movies[i].url.S %>"><%= movies[i].url.S %></td>
+			  <td onclick="localStorage.setItem('watch','<%= movies[i].url.S %>'); localStorage.setItem('title','<%= movies[i].title.S %>')"><a href ="/watch"><%= movies[i].url.S %></a></td>
 			</tr>    
 		  <% } %>
 		  </tbody>
