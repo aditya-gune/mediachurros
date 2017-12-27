@@ -40,37 +40,42 @@ if (cluster.isMaster) {
     app.set('views', __dirname + '/views');
     app.use(bodyParser.urlencoded({extended:false}));
 
+	var router = express.Router();
+	
+	var markup = undefined;
+	
     app.get('/', function(req, res) {
-		markup = '';
 		ddb.scan({
-			TableName: "Movies"			
+			TableName: "movies"
 		}, function(err, data){
 			if(err){
-				console.error("err:", JSON.stringify(err, null, 2));
-			}
-			else{
-				data.Items.forEach(function (movie){
-					markup += '<tr>'+
-								'<td>' + movie.title + '</td>' +
-								'<td>' + movie.year + '</td>' +
-								'<td>' + movie.type + '</td>' +
-								'<td>' + movie.tags + '</td>' +
-								'<td>' + movie.url + '</td>' +
-							'</tr>';
+				console.log("err:", JSON.stringify(err, null, 2));
+				res.render('index', {
+					static_path: 'static',
+					movies_markup: JSON.stringify(err, null, 2),
+					theme: process.env.THEME || 'slate',
+					flask_debug: process.env.FLASK_DEBUG || 'false'
 				});
-			console.log("Markup: ", markup);
+			}else{
+				res.render('index', {
+					static_path: 'static',
+					movies: data.Items,
+					theme: process.env.THEME || 'slate',
+					flask_debug: process.env.FLASK_DEBUG || 'false'
+				});
 			}
 		});
-		
-        res.render('index', {
+
+        
+    });
+	
+	app.get('/add', function(req, res) {
+		res.render('add', {
             static_path: 'static',
-			movies_markup: markup || 'ERROR SCANNING DB',
             theme: process.env.THEME || 'slate',
             flask_debug: process.env.FLASK_DEBUG || 'false'
         });
-    });
-	
-	
+	})
     app.post('/addmovie', function(req, res) {
         var item = {
             'url': {'S': req.body.url},

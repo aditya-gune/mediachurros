@@ -22,60 +22,47 @@
       <div class="header">
         <ul class="nav nav-pills pull-right">
 			<li class="active"><a href="#">Movies</a></li>
-			<li onclick="app.get('/add', function (req, res) {  res.send('add')})"	><a href="add">Add</a></li>
+			<li><a href="/add">Add</a></li>
         </ul>
         <h3 class="text-muted">Movies</h3>
       </div>
-      <div id="moviestbl">
-      </div>
-
-
+		<div id="moviestbl">
+		<table class="table table-hover">
+		  <table class="table table-hover"> 
+							<thead> 
+							<th>Title</th> 
+							<th>Year</th> 
+							<th>Type</th> 
+							<th>Tags</th> 
+							<th>URL</th>  
+						</thead> 
+						<tbody>
+		  <% for (var i = 0; i < movies.length; i++) { %>
+			<tr>
+			  <td><%= movies[i].title.S %></td>
+			  <td><%= movies[i].year.S %></td>
+			  <td><%= movies[i].type.S %></td>
+			  <td><%= movies[i].tags.S %></td>
+			  <td><a href ="<%= movies[i].url.S %>"><%= movies[i].url.S %></td>
+			</tr>    
+		  <% } %>
+		  </tbody>
+		</table>
+		</div>
       <div class="footer">
         <p>&copy; Aditya Gune, 2017	</p>
       </div>
-      
-      <!-- Modal -->
-       <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModal" aria-hidden="true">
-         <div class="modal-dialog">
-           <div class="modal-content">
-             <div class="modal-header">
-               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-               <h4 class="modal-title">Add a new movie here.</h4>
-             </div>
-             <div class="modal-body">
-				
-			
-                   
-             </div>
-             <div class="modal-footer">
-               <button id="addmovie" type="button" class="btn btn-primary">Add Movie</button>
-             </div>
-           </div><!-- /.modal-content -->
-         </div><!-- /.modal-dialog -->
-       </div><!-- /.modal -->
 
     </div> <!-- /container -->
 
     <script src="<%= static_path + "/jquery/jquery-1.11.3.min.js" %>"></script>
     <script src="<%= static_path + "/bootstrap/js/bootstrap.min.js" %>"></script>
-    <script type="text/javascript">
+	<script>
 	
-    $(document).ready(function() {
-		tbl = '<table class="table table-hover"> '+
-				'<thead>' +
-					'<th>Title</th>' +
-					'<th>Year</th>' +
-					'<th>Type</th>' +
-					'<th>Tags</th>' +
-					'<th>URL</th>' +
-				'</thead>';
-		$('#moviestbl').append(tbl);
-		$('#moviestbl').append(<%movies_markup%>);
-		$('#moviestbl').append('</table>');
-    });
+	$(document).ready(function() {
+		$('#moviestbl').append('');	
+	});
+	</script>
 	
-	
-	
-    </script>
   </body>
 </html>
