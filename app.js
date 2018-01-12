@@ -26,23 +26,12 @@ if (cluster.isMaster) {
     var AWS = require('aws-sdk');
     var express = require('express');
     var bodyParser = require('body-parser');
-	var passport = require('passport');
-	var Strategy = require('passport-local').Strategy;
-	var db = require('./db');
 
     AWS.config.region = process.env.REGION
+	var basicAuth = require('express-basic-auth');
 	
+
 	
-	/*passport.use(new LocalStrategy(
-	  function(username, password, done) {
-		User.findOne({ username: username }, function (err, user) {
-		  if (err) { return done(err); }
-		  if (!user) { return done(null, false); }
-		  if (!user.verifyPassword(password)) { return done(null, false); }
-		  return done(null, user);
-		});
-	  }
-	));*/
 
     var sns = new AWS.SNS();
     var ddb = new AWS.DynamoDB();
@@ -54,28 +43,18 @@ if (cluster.isMaster) {
     app.set('view engine', 'ejs');
     app.set('views', __dirname + '/views');
     app.use(bodyParser.urlencoded({extended:false}));
-
+	
+	
+	
 	var router = express.Router();
 	
 	var markup = undefined;
 	
-	/*app.get('/',
-	  function(req, res) {
-		res.render('home', { user: req.user });
-	  });
 
-	app.get('/login',
-	  function(req, res){
-		res.render('login');
-	  });
-	  
-	app.post('/login', 
-	  passport.authenticate('local', { failureRedirect: '/login' }),
-	  function(req, res) {
-		res.redirect('/');
-	  });*/
-	  
-    app.get('/', function(req, res) {
+	app.use(basicAuth({
+		users: { 'admin': 'supersecret' }
+	}))
+    app.get('/movies', function(req, res) {
 		ddb.scan({
 			TableName: "movies"
 		}, function(err, data){
