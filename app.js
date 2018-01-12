@@ -26,8 +26,23 @@ if (cluster.isMaster) {
     var AWS = require('aws-sdk');
     var express = require('express');
     var bodyParser = require('body-parser');
+	var passport = require('passport');
+	var Strategy = require('passport-local').Strategy;
+	var db = require('./db');
 
     AWS.config.region = process.env.REGION
+	
+	
+	/*passport.use(new LocalStrategy(
+	  function(username, password, done) {
+		User.findOne({ username: username }, function (err, user) {
+		  if (err) { return done(err); }
+		  if (!user) { return done(null, false); }
+		  if (!user.verifyPassword(password)) { return done(null, false); }
+		  return done(null, user);
+		});
+	  }
+	));*/
 
     var sns = new AWS.SNS();
     var ddb = new AWS.DynamoDB();
@@ -44,6 +59,22 @@ if (cluster.isMaster) {
 	
 	var markup = undefined;
 	
+	/*app.get('/',
+	  function(req, res) {
+		res.render('home', { user: req.user });
+	  });
+
+	app.get('/login',
+	  function(req, res){
+		res.render('login');
+	  });
+	  
+	app.post('/login', 
+	  passport.authenticate('local', { failureRedirect: '/login' }),
+	  function(req, res) {
+		res.redirect('/');
+	  });*/
+	  
     app.get('/', function(req, res) {
 		ddb.scan({
 			TableName: "movies"
