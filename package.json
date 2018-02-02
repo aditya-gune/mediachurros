@@ -3,12 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "ejs": "latest",
     "aws-sdk": "latest",
-    "express": "latest",
+    "basic-auth": "^2.0.0",
     "body-parser": "latest",
-	"basic-auth": "^2.0.0",
-	"express-basic-auth": "^1.1.3"
+    "ejs": "latest",
+    "express": "latest",
+    "express-basic-auth": "^1.1.3",
+    "passport": "^0.4.0",
+    "passport-http-bearer": "^1.0.1"
   },
   "scripts": {
     "start": "node app.js"

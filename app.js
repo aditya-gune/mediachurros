@@ -29,9 +29,10 @@ if (cluster.isMaster) {
 
     AWS.config.region = process.env.REGION
 	var basicAuth = require('express-basic-auth');
-	
 
-	
+	// Note: Followin required for passport and auth stuff
+	var passport = require('passport');
+	var BearerStrategy = require('passport-http-bearer').Strategy;
 
     var sns = new AWS.SNS();
     var ddb = new AWS.DynamoDB();
@@ -43,9 +44,18 @@ if (cluster.isMaster) {
     app.set('view engine', 'ejs');
     app.set('views', __dirname + '/views');
     app.use(bodyParser.urlencoded({extended:false}));
-	
-	
-	
+
+	// TODO: I added for BearerStrategy
+	passport.use(new BearerStrategy(
+		function(token, done) {
+			User.findOne({ token: token }, function (err, user) {
+				if (err) { return done(err); }
+				if (!user) { return done(null, false); }
+				return done(null, user, { scope: 'all' });
+			});
+		}
+	));
+
 	var router = express.Router();
 	
 	var markup = undefined;
@@ -75,9 +85,14 @@ if (cluster.isMaster) {
 				});
 			}
 		});
-
-        
     });
+
+	// TODO: I added as part of passport
+	app.get('/profile',
+		passport.authenticate('bearer', { session: false }),
+		function(req, res) {
+			res.json(req.user);
+		});
 	
 	app.get('/add', function(req, res) {
 		res.render('add', {
