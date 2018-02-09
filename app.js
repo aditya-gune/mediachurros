@@ -61,9 +61,9 @@ if (cluster.isMaster) {
 	var markup = undefined;
 	
 
-	app.use(basicAuth({
+	/*app.use(basicAuth({
 		users: { 'admin': 'supersecret' }
-	}))
+	}))*/
     app.get('/movies', function(req, res) {
 		ddb.scan({
 			TableName: "movies"
